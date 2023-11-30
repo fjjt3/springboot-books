@@ -5,6 +5,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,7 @@ public class CategoryServiceImpl implements ICategoryService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public CategoryResponseRest searchCategories() {
+	public ResponseEntity<CategoryResponseRest> searchCategories() {
 		
 		log.info("method searchCategories start");
 		
@@ -38,8 +40,38 @@ public class CategoryServiceImpl implements ICategoryService{
 			response.setMetadata("Invalid response", "-1", "Unsuccesfully response");
 			log.error("error consulting categories: ", e.getMessage());
 			e.getStackTrace();
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return response;
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK) ;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public ResponseEntity<CategoryResponseRest> consultById(Long Id) {
+		log.info("Start consultById method");
+		
+		CategoryResponseRest response = new CategoryResponseRest();
+		List<Category> list = new ArrayList<>();
+		
+		try {
+			
+			Optional<Category> category = categoryDao.findById(Id);
+			if(category.isPresent()) {
+				list.add(category.get());
+				response.getCategoryResponse().setCategory(list);
+			} else {
+				log.error("Error consulting category");
+				response.setMetadata("Invalid response", "-1", "Catergory not found");
+				return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.NOT_FOUND);
+			}
+			
+		} catch (Exception e) {
+			log.error("Error consulting category");
+			response.setMetadata("Invalid response", "-1", "Error consulting category");
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK) ;
 	}
 
 }

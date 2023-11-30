@@ -1,8 +1,11 @@
 package com.company.books.backend.service;
 
+import org.springframework.http.ResponseEntity;
+
 import com.company.books.backend.response.CategoryResponseRest;
 
 public interface ICategoryService {
 
-	public CategoryResponseRest  searchCategories();
+	public ResponseEntity<CategoryResponseRest>  searchCategories();
+	public ResponseEntity<CategoryResponseRest> consultById(Long id);
 }

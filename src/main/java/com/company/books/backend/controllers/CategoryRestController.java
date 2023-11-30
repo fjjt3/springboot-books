@@ -1,7 +1,9 @@
 package com.company.books.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +18,18 @@ public class CategoryRestController {
 	private ICategoryService service;
 	
 	@GetMapping("/categories")
-	public CategoryResponseRest consultCategory() {
+	public ResponseEntity<CategoryResponseRest> consultCategory() {
 		
-		CategoryResponseRest response = service.searchCategories();
+		ResponseEntity<CategoryResponseRest>  response = service.searchCategories();
 		return response;
 	}
+	
+	@GetMapping("/categories/{id}")
+	public ResponseEntity<CategoryResponseRest> consultById(@PathVariable Long id){
+		
+		ResponseEntity<CategoryResponseRest> response = service.consultById(id);
+		return response;
+	}
+	
 
 }
