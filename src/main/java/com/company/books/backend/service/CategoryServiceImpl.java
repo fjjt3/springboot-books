@@ -71,7 +71,42 @@ public class CategoryServiceImpl implements ICategoryService{
 			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
+		response.setMetadata("Response ok","00", "Succesfully response");
 		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK) ;
 	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<CategoryResponseRest> createCategory(Category category) {
+		log.info("Start createCategory method");
+		CategoryResponseRest response = new CategoryResponseRest();
+		List<Category> list = new ArrayList<>();
+		
+		try {
+			
+			Category savedCategory = categoryDao.save(category);
+			
+			if (savedCategory != null) {
+				list.add(category);
+				response.getCategoryResponse().setCategory(list);
+			} else {
+				log.error("Error saving category");
+				response.setMetadata("Invalid response", "-1", "Category not Saving");
+				return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.BAD_REQUEST);		
+			}
+			
+		} catch(Exception e) {
+			log.error("Error saving category");
+			response.setMetadata("Invalid response", "-1", "Error saving category");
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+			
+		response.setMetadata("Response ok","00", "Category created");
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
+	}
+
+
+
+	
 
 }
