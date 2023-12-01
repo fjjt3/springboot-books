@@ -27,7 +27,6 @@ public class CategoryServiceImpl implements ICategoryService{
 	public ResponseEntity<CategoryResponseRest> searchCategories() {
 		
 		log.info("method searchCategories start");
-		
 		CategoryResponseRest response = new CategoryResponseRest();
 		
 		try {
@@ -48,8 +47,8 @@ public class CategoryServiceImpl implements ICategoryService{
 	@Override
 	@Transactional(readOnly = true)
 	public ResponseEntity<CategoryResponseRest> consultById(Long Id) {
-		log.info("Start consultById method");
 		
+		log.info("Start consultById method");
 		CategoryResponseRest response = new CategoryResponseRest();
 		List<Category> list = new ArrayList<>();
 		
@@ -72,12 +71,13 @@ public class CategoryServiceImpl implements ICategoryService{
 		}
 		
 		response.setMetadata("Response ok","00", "Succesfully response");
-		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK) ;
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
 	}
 
 	@Override
 	@Transactional
 	public ResponseEntity<CategoryResponseRest> createCategory(Category category) {
+		
 		log.info("Start createCategory method");
 		CategoryResponseRest response = new CategoryResponseRest();
 		List<Category> list = new ArrayList<>();
@@ -103,6 +103,70 @@ public class CategoryServiceImpl implements ICategoryService{
 			
 		response.setMetadata("Response ok","00", "Category created");
 		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<CategoryResponseRest> updateCategory(Category category, Long id) {
+		
+		log.info("Start updateCategory method");
+		CategoryResponseRest response = new CategoryResponseRest();
+		List<Category> list = new ArrayList<>();
+		
+		try {
+			
+			Optional<Category> searchedCategory = categoryDao.findById(id);
+			if (searchedCategory.isPresent()) {
+				searchedCategory.get().setName(category.getName());
+				searchedCategory.get().setDescription(category.getDescription());
+				
+				Category updateCategory = categoryDao.save(searchedCategory.get());
+				
+				if (updateCategory != null) {
+					response.setMetadata("Response ok","00", "Category updated");
+					list.add(updateCategory);
+					response.getCategoryResponse().setCategory(list);	
+				}else {
+					log.error("Error updating category");
+					response.setMetadata("Invalid response", "-1", "Category not updating");
+					return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.BAD_REQUEST);
+				}
+			}else {
+				log.error("Error updating category");
+				response.setMetadata("Invalid response", "-1", "Category not updating");
+				return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.NOT_FOUND);
+			}
+			
+		}catch(Exception e) {
+			log.error("Error updating category", e.getMessage());
+			e.getStackTrace();
+			response.setMetadata("Invalid response", "-1", "Category not updating");
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.setMetadata("Response ok","00", "Category updated");
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<CategoryResponseRest> deleteCategory(Long id) {
+		
+		log.info("Start updateCategory method");
+		CategoryResponseRest response = new CategoryResponseRest();
+		
+		try {
+			categoryDao.deleteById(id);
+			response.setMetadata("Response ok","00", "Category deleted");
+			
+		} catch(Exception e) {
+			log.error("Error deleting category", e.getMessage());
+			e.getStackTrace();
+			response.setMetadata("Invalid response", "-1", "Category not deleted");
+			return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.setMetadata("Response ok","00", "Category deleted");
+		return new ResponseEntity<CategoryResponseRest>(response, HttpStatus.OK);
+	
 	}
 
 
