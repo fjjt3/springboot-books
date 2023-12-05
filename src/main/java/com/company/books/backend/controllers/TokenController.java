@@ -28,7 +28,7 @@ public class TokenController {
 	@Autowired
 	private JwtService jwtService;
 	
-	@PostMapping("/autheticate")
+	@PostMapping("/authenticate")
 	public ResponseEntity<TokenResponse> autenthicate(@RequestBody AuthRequest request){
 		
 		authenticationManager.authenticate(

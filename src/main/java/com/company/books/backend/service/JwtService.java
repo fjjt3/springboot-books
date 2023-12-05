@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 	
-	  private static final String JWT_SECRET_KEY = "cursospringboot3";
+	  private static final String JWT_SECRET_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlZGl0YSIsImV4cCI6MTcwMTY5NDkzNCwiaWF0IjoxNzAxNjkxMzM0LCJyb2wiOnsiYXV0aG9yaXR5IjoiUk9MRV9FbXBsZWFkbyJ9fQ.R_B5KOP8J-V55kjYljt9wiTwtpnUV04dwQBIAT4K9dU";
 
 	  public static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 60 * (long) 1; // 1 hora
 
