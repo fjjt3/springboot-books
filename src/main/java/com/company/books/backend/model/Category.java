@@ -17,6 +17,18 @@ public class Category implements Serializable{
 	 */
 	private static final long serialVersionUID = 476689723461888274L;
 	
+	
+
+	public Category() {
+		super();
+	}
+	public Category(Long id, String name, String description) {
+		super();
+		Id = id;
+		this.name = name;
+		this.description = description;
+	}
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long Id;
