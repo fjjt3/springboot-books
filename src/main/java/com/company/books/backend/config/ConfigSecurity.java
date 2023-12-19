@@ -55,12 +55,12 @@ public class ConfigSecurity {
 		
 		http.authorizeHttpRequests( configure->{
 			configure
-			.requestMatchers(HttpMethod.GET, "/v1/categories").hasRole("Empleado")
+			//.requestMatchers(HttpMethod.GET, "/v1/categories").hasRole("Empleado")
 			.requestMatchers(HttpMethod.GET, "/v1/categories/**").hasRole("Empleado")
 			.requestMatchers(HttpMethod.POST, "/v1/categories").hasRole("Jefe")
 			.requestMatchers(HttpMethod.PUT, "/v1/categories/**").hasRole("Jefe")
 			.requestMatchers(HttpMethod.DELETE, "/v1/categories/**").hasRole("Jefe")
-			.requestMatchers("/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
+			.requestMatchers("/v1/categories", "/v1/authenticate", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
 			
 		}
 		)
